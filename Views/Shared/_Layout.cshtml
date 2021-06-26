@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"]</title>
+    <link href="~/css/StyleSheet.css" rel="stylesheet" />
+</head>
+<body>
+    <header>
+        <h1>Patrick Hessian</h1>
+        <a asp-controller="Home" asp-action="Index">Home</a>
+        <a asp-controller="Student" asp-action="Index">Student</a>
+        <a asp-controller="Community" asp-action="Index">Community</a>
+    </header>
+    <div class="content">
+        @RenderBody()
+    </div>
+    <footer>
+        
+    </footer>
+</body>
+</html>
