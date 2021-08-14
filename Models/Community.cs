@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Lab4.Models
 {
-    public class Community
+    public class Community : IEquatable<Community>
     {
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -23,6 +23,30 @@ namespace Lab4.Models
         [DataType(DataType.Currency)]
         [Column(TypeName = "money")]
         public decimal Budget { get; set; }
+
+        public bool Equals(Community other)
+        {
+            if(other is null)
+            {
+                return false;
+            }
+            if (this.Id == other.Id)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
 
         public ICollection<CommunityMembership> Membership { get; set; }
     }

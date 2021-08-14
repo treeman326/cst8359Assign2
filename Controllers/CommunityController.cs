@@ -33,8 +33,13 @@ namespace Lab4.Controllers
             if(ID != null)
             {
                 ViewData["CommunityId"] = ID;
-                viewModel.CommunityMemberships = viewModel.Communities.Where(
-                    x => x.Id == ID).Single().Membership;
+                viewModel.CommunityMemberships = await _context.CommunityMemberships
+                .Include(i => i.Community)
+                .Include(i => i.Student)
+                .AsNoTracking()
+                .ToListAsync();
+                viewModel.Students = viewModel.CommunityMemberships.Where(
+                    x => x.CommunityId == ID).Select(f => f.Student);
             }
             return View(viewModel);
         }

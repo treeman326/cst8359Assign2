@@ -132,7 +132,7 @@ namespace Lab4.Controllers
                     await blockBlob.DeleteAsync();
                 }
 
-                _context.Advertisements.Remove(image);
+                _context.Advertisements.Remove(image); 
                 await _context.SaveChangesAsync();
 
             }

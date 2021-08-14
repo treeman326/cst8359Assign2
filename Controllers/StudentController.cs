@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Lab4.Data;
 using Lab4.Models;
+using Lab4.Models.ViewModels;
 
 namespace Lab4.Controllers
 {
@@ -20,9 +21,27 @@ namespace Lab4.Controllers
         }
 
         // GET: Student
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? ID)
         {
-            return View(await _context.Students.ToListAsync());
+            var viewModel = new CommunityViewModel();
+            viewModel.Students = await _context.Students
+                .Include(i => i.Membership)
+                .AsNoTracking()
+                .OrderBy(i => i.LastName)
+                .ToListAsync();
+
+            if (ID != null)
+            {
+                ViewData["StudentId"] = ID;
+                viewModel.CommunityMemberships = await _context.CommunityMemberships
+                .Include(i => i.Community)
+                .Include(i => i.Student)
+                .AsNoTracking()
+                .ToListAsync();
+                viewModel.Communities = viewModel.CommunityMemberships.Where(
+                    x => x.StudentId == ID).Select(f => f.Community);
+            }
+            return View(viewModel);
         }
 
         // GET: Student/Details/5
@@ -63,6 +82,53 @@ namespace Lab4.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
+        }
+
+
+        public async Task<IActionResult> AddMembership(string CommunityId, int StudentId)
+        {
+                CommunityMembership newMember = new CommunityMembership();
+                newMember.StudentId = StudentId;
+                newMember.CommunityId = CommunityId;
+                _context.Add(newMember);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> RemoveMembership(string CommunityId, int StudentId)
+        {
+            CommunityMembership newMember = new CommunityMembership();
+            newMember.StudentId = StudentId;
+            newMember.CommunityId = CommunityId;
+            _context.CommunityMemberships.Remove(newMember);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Student/EditMembership
+        public async Task<IActionResult> EditMembership(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var viewModel = new MembershipViewModel();
+            viewModel.Student = await _context.Students.FindAsync(id);
+            IEnumerable<CommunityMembership> temp = await _context.CommunityMemberships
+                .Include(i => i.Community)
+                .Include(i => i.Student)
+                .OrderBy(i => i.CommunityId)
+                .AsNoTracking()
+                .ToListAsync();
+            viewModel.InvolvedCommunities = temp.Where(
+                    x => x.StudentId == id).Select(f => f.Community);
+
+            IEnumerable<Community> temp2 = await _context.Communities
+                .OrderBy(i => i.Id)
+                .ToListAsync();
+            viewModel.UninvolvedCommunities = temp2.Except(viewModel.InvolvedCommunities);
+            return View(viewModel);
         }
 
         // GET: Student/Edit/5

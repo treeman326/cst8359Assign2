@@ -33,6 +33,7 @@
                 </td>
                 <td>
                     <a asp-action="Index" asp-route-id="@item.Id">Select</a> |
+                    <a asp-controller="Advertisement" asp-action="Index" asp-route-id="@item.Id">View Ads</a> |
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
@@ -48,20 +49,20 @@
     </h3>
     <table class="table">
         <tr>
-            @if (Model.CommunityMemberships.Count() > 0)
+            @if (Model.Students.Count() > 0)
             {
-                <th> ID </th>
+                <th> Name </th>
             }
             else
             {
                 <th> No Students </th>
             }
         </tr>
-        @foreach (var item in Model.CommunityMemberships)
+        @foreach (var item in Model.Students)
         {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.StudentId)
+            @Html.DisplayFor(modelItem => item.FullName)
         </td>
     </tr>
         }
