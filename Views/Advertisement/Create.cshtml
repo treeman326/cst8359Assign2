@@ -1,0 +1,24 @@
+﻿@model Lab4.Models.ViewModels.CreateAdViewModel
+
+<h1>Upload</h1>
+
+<h4>Upload an ad for community @Model.CommunityTitle</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <div class="btn btn-sm float-left">
+                    <input name="File" type="file">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button name="CommunityId" value="@Model.CommunityId" class="btn btn-primary">Upload Now</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index" asp-route-id="@Model.CommunityId">Back to List</a>
+</div>

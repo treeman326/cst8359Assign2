@@ -1,0 +1,43 @@
+﻿@model Lab4.Models.ViewModels.MembershipViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>@Html.Display(Model.Student.FullName)</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.UninvolvedCommunities)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    <a asp-action="AddMembership" asp-route-communityid="@item.Id" asp-route-studentid="@Model.Student.Id">Register</a>
+                </td>
+            </tr>
+        }
+        @foreach (var item in Model.InvolvedCommunities)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    <a asp-action="RemoveMembership" asp-route-communityid="@item.Id" asp-route-studentid="@Model.Student.Id">Unregister</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<p>
+    <a asp-action="Index">Back to List</a>
+</p>
